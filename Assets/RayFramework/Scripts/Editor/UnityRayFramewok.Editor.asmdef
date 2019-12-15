@@ -1,0 +1,16 @@
+{
+    "name": "UnityRayFramewok.Editor",
+    "references": [
+        "GUID:89d64e6bb4688b14797e1bf4b4941207",
+        "GUID:c3e99b9a04a363e40b53f47bc1e07d6c"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": []
+}
