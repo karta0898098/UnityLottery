@@ -16,7 +16,8 @@ namespace App.Runtime
         {
             InputText.text = string.Empty;
             DisplayText.text = string.Empty;
-            InputTextConfig.OnDeselect(null);
+            //InputTextConfig.OnDeselect(null);
+            InputText.ActivateInputField();
             ComfirmButton.onClick.AddListener(OnClickComfirm);
             CancelButton.onClick.AddListener(OnClickCancel);
         }
@@ -29,7 +30,6 @@ namespace App.Runtime
 
         public void OnClickComfirm()
         {
-            //TODO Add List
             if (!string.IsNullOrEmpty(InputText.text))
             {
                 AppEntry.Store.Dispatch(new OnAddEditorDrawnEvent(OnAddEditorDrawnEvent.Action.Add,
@@ -46,6 +46,7 @@ namespace App.Runtime
         public void OnClickCancel()
         {
             //InputText.text = string.Empty;
+            //DisplayText.text = string.Empty;
             //var delay = new TimerAuto(0.25f, () =>
             //{
             //    gameObject.SetActive(false);
