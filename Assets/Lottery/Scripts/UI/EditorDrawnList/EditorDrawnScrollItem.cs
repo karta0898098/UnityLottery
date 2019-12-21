@@ -4,11 +4,11 @@ using FancyScrollView;
 
 namespace App.Runtime
 {
-    public class DrawnScrollItem : FancyScrollRectCell<DrawnItemData>
+    public class EditorDrawnScrollItem : FancyScrollRectCell<EditorDrawnItemData>
     {
         [SerializeField] Text optionText = default;
 
-        public override void UpdateContent(DrawnItemData itemData)
+        public override void UpdateContent(EditorDrawnItemData itemData)
         {
             optionText.text = itemData.Text;
         }

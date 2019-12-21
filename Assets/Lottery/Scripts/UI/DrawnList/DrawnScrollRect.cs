@@ -5,7 +5,7 @@ using FancyScrollView;
 
 namespace App.Runtime
 {
-    public class DrawnScrollRect : FancyScrollRect<DrawItemData>
+    public class DrawnScrollRect : FancyScrollRect<DrawnItemData>
     {
         [SerializeField] float cellSize = 100f;
         [SerializeField] GameObject cellPrefab = default;
@@ -15,9 +15,9 @@ namespace App.Runtime
 
         public void Start()
         {
-            var dealy = new UnityRayFramework.Runtime.TimerAuto(0.5f, () => 
+            var dealy = new UnityRayFramework.Runtime.TimerAuto(0.5f, () =>
             {
-                var items = Enumerable.Range(0, 5).Select(i => new DrawItemData($"Option {i}")).ToArray();
+                var items = Enumerable.Range(0, 35).Select(i => new DrawnItemData($"Option {i}")).ToArray();
 
                 UpdateData(items);
             });
@@ -53,17 +53,17 @@ namespace App.Runtime
             }
         }
 
-        public void UpdateData(IList<DrawItemData> items)
+        public void UpdateData(IList<DrawnItemData> items)
         {
             UpdateContents(items);
         }
     }
 
-    public class DrawItemData
+    public class DrawnItemData
     {
         public string Text { get; private set; }
 
-        public DrawItemData(string text)
+        public DrawnItemData(string text)
         {
             Text = text;
         }

@@ -11,13 +11,14 @@ namespace App.Runtime
     {
         [SerializeField] Text DrawnCountText;
         [SerializeField] Button DrawButton;
-
+        [SerializeField] Button AddDrawnButton;
         [SerializeField] GameObject AlertNoDrawn;
 
         public readonly string DrawnText = "簽桶剩餘 : {0}";
         private void OnEnable()
         {
             DrawButton.onClick.AddListener(OnClickDraw);
+            AddDrawnButton.onClick.AddListener(OnClickAddDrawn);
             AppEntry.Store.Subscribe(OnUIDrawEvent.EventId, UpdateDrawnCount);
             AppEntry.Store.Dispatch(new OnUIDrawEvent(OnUIDrawEvent.Action.Init));
         }
@@ -26,6 +27,7 @@ namespace App.Runtime
         private void OnDisable()
         {
             AppEntry.Store.Unsubscribe(OnUIDrawEvent.EventId, UpdateDrawnCount);
+            AddDrawnButton.onClick.RemoveListener(OnClickAddDrawn);
             DrawButton.onClick.RemoveListener(OnClickDraw);
         }
 
@@ -33,6 +35,11 @@ namespace App.Runtime
         {
             DrawButton.interactable = false;
             AppEntry.Store.Dispatch(new OnUIDrawEvent(OnUIDrawEvent.Action.OnClick));
+        }
+
+        private void OnClickAddDrawn() 
+        {
+            AppEntry.Router.NavgationTo("DrawnPage");
         }
 
         private void UpdateDrawnCount(object sender, GameEventArgs ne)

@@ -7,6 +7,7 @@ namespace App.Runtime
         public override void OnEnter()
         {
             InitAppSate();
+            AppEntry.Router.NavgationTo("Home");
         }
 
 
@@ -14,5 +15,6 @@ namespace App.Runtime
         {
             AppEntry.Store.InitState();
         }
+
     }
 }

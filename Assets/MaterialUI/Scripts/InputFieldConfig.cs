@@ -119,7 +119,7 @@ namespace MaterialUI
 			StartCoroutine (DelayedHeight());
 		}
 		
-		void Update ()
+		public void Update ()
 		{
 			animDeltaTime = Time.realtimeSinceStartup - animStartTime;
 			
