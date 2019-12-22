@@ -15,12 +15,12 @@ namespace App.Runtime
 
         public void Start()
         {
-            var dealy = new UnityRayFramework.Runtime.TimerAuto(0.5f, () =>
-            {
-                var items = Enumerable.Range(0, 35).Select(i => new DrawnItemData($"Option {i}")).ToArray();
+            //var dealy = new UnityRayFramework.Runtime.TimerAuto(0.5f, () =>
+            //{
+            //    var items = Enumerable.Range(0, 35).Select(i => new DrawnItemData($"Option {i}")).ToArray();
 
-                UpdateData(items);
-            });
+            //    UpdateData(items);
+            //});
         }
 
         public float PaddingTop

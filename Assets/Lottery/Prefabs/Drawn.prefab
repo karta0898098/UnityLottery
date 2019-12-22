@@ -307,7 +307,7 @@ GameObject:
   - component: {fileID: 6887529343187251311}
   - component: {fileID: 5276216154565291682}
   m_Layer: 5
-  m_Name: Cell
+  m_Name: Drawn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -347,6 +347,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   optionText: {fileID: 6887529342826547538}
+  toggle: {fileID: 6887529344392940668}
 --- !u!1 &6887529343816632880
 GameObject:
   m_ObjectHideFlags: 0

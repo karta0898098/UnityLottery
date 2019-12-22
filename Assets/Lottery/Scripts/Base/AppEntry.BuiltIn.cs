@@ -10,6 +10,7 @@ namespace App.Runtime
 
         public static EventComponent Event { get; private set; }
 
+        public static SettingComponent Setting { get; private set; }
         public static UIComponent UI { get; private set; }
 
         public static TimerComponent Timer { get; private set; }
@@ -21,6 +22,7 @@ namespace App.Runtime
             Event = RayFrameworkEntry.GetComponent<EventComponent>();
             UI = RayFrameworkEntry.GetComponent<UIComponent>();
             Timer = RayFrameworkEntry.GetComponent<TimerComponent>();
+            Setting = RayFrameworkEntry.GetComponent<SettingComponent>();
         }
     }
 }

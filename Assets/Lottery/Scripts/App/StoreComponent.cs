@@ -2,6 +2,8 @@
 using UnityEngine;
 using UnityRayFramework.Runtime;
 using RayFramework.Event;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace App.Runtime
 {
@@ -9,7 +11,14 @@ namespace App.Runtime
     {
         public void InitState()
         {
-            AppEntry.Blackboard.SetValue(Constant.DrawnCount, 10);
+            var jsonDrawnList = AppEntry.Setting.GetString(Constant.EditorDrawnList);
+            if (!string.IsNullOrEmpty(jsonDrawnList))
+            {
+                Debug.Log(jsonDrawnList);
+                var drawnList = JsonConvert.DeserializeObject<List<EditorDrawnItemData>>(jsonDrawnList);
+                AppEntry.Blackboard.SetValue(Constant.EditorDrawnList, drawnList);
+            }
+            AppEntry.Blackboard.SetValue(Constant.DrawnCount, 0);
         }
 
         public void Dispatch(IStoreAction Action)
@@ -26,6 +35,13 @@ namespace App.Runtime
         public void Unsubscribe(int id, EventHandler<GameEventArgs> handler)
         {
             AppEntry.Event.Unsubscribe(id, handler);
+        }        
+
+        private void OnApplicationQuit()
+        {
+            var drawnList = AppEntry.Blackboard.GetValue(Constant.EditorDrawnList, new List<EditorDrawnItemData>());
+            var jsonDrawnList = JsonConvert.SerializeObject(drawnList);
+            AppEntry.Setting.SetString(Constant.EditorDrawnList, jsonDrawnList);
         }
     }
 }

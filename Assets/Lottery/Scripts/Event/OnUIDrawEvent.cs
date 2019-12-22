@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Linq;
+using System.Collections.Generic;
 using RayFramework.Event;
+
 
 namespace App.Runtime
 {
@@ -30,21 +33,17 @@ namespace App.Runtime
 
         public override void Do()
         {
-            var drawnCount = AppEntry.Blackboard.GetValue(Constant.DrawnCount, 0);
-            if (action == Action.OnClick)
-            {              
-                var calculation = drawnCount - 1;
-                if (calculation >= 0)
-                {
-                    Count = calculation;
-                    AppEntry.Blackboard.SetValue(Constant.DrawnCount, calculation);
-                }
+            var drawnList = AppEntry.Blackboard.GetValue(Constant.EditorDrawnList, new List<EditorDrawnItemData>());
+            if (action == Action.Init) 
+            {
+                Count = drawnList.Where((item) => item.IsOn == true && item.IsDrawed == false).Count();
             }
 
-            if(action == Action.Init)
+            //var drawnCount = AppEntry.Blackboard.GetValue(Constant.DrawnCount, 0);
+            if (action == Action.OnClick)
             {
-                Count = drawnCount;
-            }            
+                Count = drawnList.Where((item) => item.IsOn == true && item.IsDrawed == false).Count();                                         
+            }         
         }
     }
 }
