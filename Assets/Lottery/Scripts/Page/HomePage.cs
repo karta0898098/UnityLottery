@@ -16,6 +16,7 @@ namespace App.Runtime
         [SerializeField] Button DrawButton;
         [SerializeField] Button AddDrawnButton;
         [SerializeField] GameObject AlertNoDrawn;
+        [SerializeField] Image Pic;
 
         private WaitForSeconds wait = new WaitForSeconds(0.125f);
 
@@ -71,16 +72,22 @@ namespace App.Runtime
 
         IEnumerator DrawEffect(List<EditorDrawnItemData> drawnList)
         {
+            var imageCache = AppEntry.Blackboard.GetValue(Constant.ImageCache, new Dictionary<string, Sprite>());
             int j = 0;
             for (int i = 0; i < 20; i++)
             {
-                if (j >= drawnList.Count) 
+                if (j >= drawnList.Count)
                 {
                     j = 0;
                 }
 
                 yield return wait;
+                imageCache.TryGetValue(drawnList[j].ImagePath, out var s);
                 DrawedText.text = drawnList[j].Text;
+                if (s != null)
+                {
+                    Pic.sprite = s;
+                }
                 j++;
             }
 
@@ -92,6 +99,12 @@ namespace App.Runtime
                 drawnList[index].IsDrawed = true;
                 drawn[rand].IsDrawed = true;
                 DrawedText.text = drawn[rand].Text;
+
+                imageCache.TryGetValue(drawnList[rand].ImagePath, out var s);
+                if (s != null)
+                {
+                    Pic.sprite = s;
+                }
             }
 
             AppEntry.Store.Dispatch(new OnUIDrawEvent(OnUIDrawEvent.Action.OnClick));

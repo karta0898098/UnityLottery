@@ -16,9 +16,21 @@ namespace App.Runtime
             {
                 Debug.Log(jsonDrawnList);
                 var drawnList = JsonConvert.DeserializeObject<List<EditorDrawnItemData>>(jsonDrawnList);
+                var dict = new Dictionary<string, Sprite>();
                 AppEntry.Blackboard.SetValue(Constant.EditorDrawnList, drawnList);
+                AppEntry.Blackboard.SetValue(Constant.ImageCache, dict);
+                for (int i = 0; i < drawnList.Count; i++) 
+                {
+                    if (!string.IsNullOrEmpty(drawnList[i].ImagePath))
+                    {
+                        var texture = NativeToolkit.LoadImageFromFile(drawnList[i].ImagePath);
+                        var s = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+                        dict.Add(drawnList[i].ImagePath, s);
+                        Destroy(texture);
+                    }
+                }
             }
-            AppEntry.Blackboard.SetValue(Constant.DrawnCount, 0);
+            //AppEntry.Blackboard.SetValue(Constant.DrawnCount, 0);
         }
 
         public void Dispatch(IStoreAction Action)

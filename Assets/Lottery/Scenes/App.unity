@@ -3485,6 +3485,7 @@ MonoBehaviour:
   DrawButton: {fileID: 1542953138}
   AddDrawnButton: {fileID: 1330854334}
   AlertNoDrawn: {fileID: 298261801}
+  Pic: {fileID: 0}
 --- !u!1 &828912806
 GameObject:
   m_ObjectHideFlags: 0

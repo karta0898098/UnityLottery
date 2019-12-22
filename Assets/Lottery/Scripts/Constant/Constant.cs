@@ -5,5 +5,6 @@ namespace App.Runtime
     {
         public const string DrawnCount = "DrawnCount";
         public const string EditorDrawnList = "EditorDrawnList";
+        public const string ImageCache = "ImageCache";
     }
 }
