@@ -19,16 +19,20 @@ namespace App.Runtime
                 var dict = new Dictionary<string, Sprite>();
                 AppEntry.Blackboard.SetValue(Constant.EditorDrawnList, drawnList);
                 AppEntry.Blackboard.SetValue(Constant.ImageCache, dict);
-                for (int i = 0; i < drawnList.Count; i++) 
-                {
-                    if (!string.IsNullOrEmpty(drawnList[i].ImagePath))
-                    {
-                        var texture = NativeToolkit.LoadImageFromFile(drawnList[i].ImagePath);
-                        var s = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
-                        dict.Add(drawnList[i].ImagePath, s);
-                        Destroy(texture);
-                    }
-                }
+                //for (int i = 0; i < drawnList.Count; i++)
+                //{
+                //    if (!string.IsNullOrEmpty(drawnList[i].ImagePath))
+                //    {
+
+                //        var texture = NativeGallery.LoadImageAtPath(drawnList[i].ImagePath);
+                //        if (texture != null)
+                //        {
+                //            var s = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+                //            dict.Add(drawnList[i].ImagePath, s);
+                //        }
+
+                //    }
+                //}
             }
             //AppEntry.Blackboard.SetValue(Constant.DrawnCount, 0);
         }
@@ -41,13 +45,13 @@ namespace App.Runtime
 
         public void Subscribe(int id, EventHandler<GameEventArgs> handler)
         {
-            AppEntry.Event.Subscribe(id,handler);
+            AppEntry.Event.Subscribe(id, handler);
         }
 
         public void Unsubscribe(int id, EventHandler<GameEventArgs> handler)
         {
             AppEntry.Event.Unsubscribe(id, handler);
-        }        
+        }
 
         private void OnApplicationQuit()
         {

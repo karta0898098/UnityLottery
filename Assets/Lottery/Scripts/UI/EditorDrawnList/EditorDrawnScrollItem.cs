@@ -19,10 +19,13 @@ namespace App.Runtime
             data = itemData;
             optionText.text = itemData.Text;
             var imageCache = AppEntry.Blackboard.GetValue(Constant.ImageCache, new Dictionary<string, Sprite>());
-            var exist = imageCache.TryGetValue(itemData.ImagePath, out var s);
-            if (exist)
+            if (!string.IsNullOrEmpty(itemData.ImagePath))
             {
-                Image.sprite = s;
+                var exist = imageCache.TryGetValue(itemData.ImagePath, out var s);
+                if (exist)
+                {
+                    Image.sprite = s;
+                }
             }
         }
 
@@ -43,26 +46,63 @@ namespace App.Runtime
             DecreaseBtn.onClick.RemoveListener(OnDecrease);
         }
 
-        private void OnDecrease() 
+        private void OnDecrease()
         {
             AppEntry.Store.Dispatch(new OnAddEditorDrawnEvent(OnAddEditorDrawnEvent.Action.Decrease, data));
         }
 
         private void OnPickerImage()
         {
-            NativeToolkit.PickImage();
-            NativeToolkit.OnImagePicked += OnImagePicked;
+
+            NativeGallery.GetImageFromGallery((path) =>
+            {
+                var texture = NativeGallery.LoadImageAtPath(path);
+                if (texture != null)
+                {
+                    var s = Sprite.Create(texture, new Rect(0, 0, texture.width * 0.8f, texture.height * 0.8f), Vector2.zero);
+                    data.ImagePath = System.Guid.NewGuid().ToString();
+                    Image.sprite = s;
+                    var imageCache = AppEntry.Blackboard.GetValue(Constant.ImageCache, new Dictionary<string, Sprite>());
+
+                    if (imageCache.ContainsKey(data.ImagePath))
+                    {
+                        imageCache[data.ImagePath] = s;
+                    }
+                    else
+                    {
+                        imageCache.Add(data.ImagePath, s);
+                    }
+                    AppEntry.Blackboard.SetValue(Constant.ImageCache, imageCache);
+                }
+            });
+            //NativeToolkit.PickImage();
+            //NativeToolkit.OnImagePicked += OnImagePicked;
         }
 
-        private void OnImagePicked(Texture2D texture ,string path)
+        private void OnImagePicker(string path)
+        {
+            OnImagePicked(NativeGallery.LoadImageAtPath(path), path);
+        }
+
+        private void OnImagePicked(Texture2D texture, string path)
         {
             var s = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
             data.ImagePath = path;
             Image.sprite = s;
             var imageCache = AppEntry.Blackboard.GetValue(Constant.ImageCache, new Dictionary<string, Sprite>());
-            imageCache.Add(path, s);
-            Destroy(texture);
-            NativeToolkit.OnImagePicked -= OnImagePicked;
+
+            if (imageCache.ContainsKey(path))
+            {
+                imageCache[path] = s;
+            }
+            else
+            {
+                imageCache.Add(path, s);
+            }
+            Debug.Log(path);
+            AppEntry.Blackboard.SetValue(Constant.ImageCache, imageCache);
+            //Destroy(texture, 10);
+            //NativeToolkit.OnImagePicked -= OnImagePicked;
         }
     }
 }
