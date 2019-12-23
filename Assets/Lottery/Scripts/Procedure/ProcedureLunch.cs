@@ -1,5 +1,8 @@
 ﻿using RayFramework.Procedure;
 
+using System.Collections.Generic;
+using UnityEngine;
+
 namespace App.Runtime
 {
     public class ProcedureLunch : ProcedureBase
@@ -7,7 +10,7 @@ namespace App.Runtime
         public override void OnEnter()
         {
             InitAppSate();
-            UnityEngine.Application.targetFrameRate = 60;
+            Application.targetFrameRate = 60;
             AppEntry.Router.NavgationTo("Home");
         }
 

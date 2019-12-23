@@ -81,7 +81,7 @@ namespace App.Runtime
 
     public class EditorDrawnItemData 
     {
-        public string ImagePath { get; set; }
+        public string ImagePath { get; set; } = "default";
         public bool IsOn { get; set; }
         public bool IsDrawed { get; set; }
         public string Text { get; private set; }

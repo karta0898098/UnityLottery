@@ -9,30 +9,37 @@ namespace App.Runtime
 {
     public class StoreComponent : RayFrameworkComponent
     {
+        [SerializeField] Sprite DefaultImage;
         public void InitState()
         {
+            var dict = new Dictionary<string, Sprite>();
+            dict.Add("default", DefaultImage);
+            AppEntry.Blackboard.SetValue(Constant.ImageCache, dict);
+
             var jsonDrawnList = AppEntry.Setting.GetString(Constant.EditorDrawnList);
             if (!string.IsNullOrEmpty(jsonDrawnList))
             {
                 Debug.Log(jsonDrawnList);
                 var drawnList = JsonConvert.DeserializeObject<List<EditorDrawnItemData>>(jsonDrawnList);
-                var dict = new Dictionary<string, Sprite>();
                 AppEntry.Blackboard.SetValue(Constant.EditorDrawnList, drawnList);
-                AppEntry.Blackboard.SetValue(Constant.ImageCache, dict);
-                //for (int i = 0; i < drawnList.Count; i++)
-                //{
-                //    if (!string.IsNullOrEmpty(drawnList[i].ImagePath))
-                //    {
 
-                //        var texture = NativeGallery.LoadImageAtPath(drawnList[i].ImagePath);
-                //        if (texture != null)
-                //        {
-                //            var s = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
-                //            dict.Add(drawnList[i].ImagePath, s);
-                //        }
-
-                //    }
-                //}
+                for (int i = 0; i < drawnList.Count; i++)
+                {
+#if !UNITY_EDITOR
+                var dirPath = Application.persistentDataPath + "/cacheImages/";
+#else
+                var dirPath = Application.dataPath + "/cacheImages/";
+#endif
+                    if (!string.IsNullOrEmpty(drawnList[i].ImagePath) && drawnList[i].ImagePath!= "default")
+                    {
+                        var texture = NativeGallery.LoadImageAtPath(dirPath + drawnList[i].ImagePath + ".png");
+                        if (texture != null)
+                        {
+                            var s = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+                            dict.Add(drawnList[i].ImagePath, s);
+                        }
+                    }
+                }
             }
             //AppEntry.Blackboard.SetValue(Constant.DrawnCount, 0);
         }

@@ -2,6 +2,8 @@
 using UnityEngine.UI;
 using FancyScrollView;
 using System.Collections.Generic;
+using Crosstales.FB;
+using System.IO;
 
 namespace App.Runtime
 {
@@ -21,8 +23,8 @@ namespace App.Runtime
             var imageCache = AppEntry.Blackboard.GetValue(Constant.ImageCache, new Dictionary<string, Sprite>());
             if (!string.IsNullOrEmpty(itemData.ImagePath))
             {
-                var exist = imageCache.TryGetValue(itemData.ImagePath, out var s);
-                if (exist)
+                imageCache.TryGetValue(itemData.ImagePath, out var s);
+                if (s != null)
                 {
                     Image.sprite = s;
                 }
@@ -54,55 +56,57 @@ namespace App.Runtime
         private void OnPickerImage()
         {
 
+#if UNITY_EDITOR
+            ExtensionFilter[] extensions = new[] {
+                new ExtensionFilter("Image Files", "png", "jpg", "jpeg" ),
+            };
+            string path = FileBrowser.OpenSingleFile("Open File", string.Empty, extensions);
+            OnImagePicker(path);
+#else
             NativeGallery.GetImageFromGallery((path) =>
             {
-                var texture = NativeGallery.LoadImageAtPath(path);
-                if (texture != null)
-                {
-                    var s = Sprite.Create(texture, new Rect(0, 0, texture.width * 0.8f, texture.height * 0.8f), Vector2.zero);
-                    data.ImagePath = System.Guid.NewGuid().ToString();
-                    Image.sprite = s;
-                    var imageCache = AppEntry.Blackboard.GetValue(Constant.ImageCache, new Dictionary<string, Sprite>());
-
-                    if (imageCache.ContainsKey(data.ImagePath))
-                    {
-                        imageCache[data.ImagePath] = s;
-                    }
-                    else
-                    {
-                        imageCache.Add(data.ImagePath, s);
-                    }
-                    AppEntry.Blackboard.SetValue(Constant.ImageCache, imageCache);
-                }
+                OnImagePicker(path);
             });
-            //NativeToolkit.PickImage();
-            //NativeToolkit.OnImagePicked += OnImagePicked;
+
+#endif
         }
 
         private void OnImagePicker(string path)
         {
-            OnImagePicked(NativeGallery.LoadImageAtPath(path), path);
-        }
-
-        private void OnImagePicked(Texture2D texture, string path)
-        {
-            var s = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
-            data.ImagePath = path;
-            Image.sprite = s;
-            var imageCache = AppEntry.Blackboard.GetValue(Constant.ImageCache, new Dictionary<string, Sprite>());
-
-            if (imageCache.ContainsKey(path))
+            var texture = NativeGallery.LoadImageAtPath(path, -1, false);
+            if (texture != null)
             {
-                imageCache[path] = s;
+                texture.Apply();
+                var s = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+                data.ImagePath = System.Guid.NewGuid().ToString();
+                Image.sprite = s;
+
+                var imageCache = AppEntry.Blackboard.GetValue(Constant.ImageCache, new Dictionary<string, Sprite>());
+                if (imageCache.ContainsKey(data.ImagePath))
+                {
+                    imageCache[data.ImagePath] = s;
+                }
+                else
+                {
+                    imageCache.Add(data.ImagePath, s);
+                }
+
+                AppEntry.Blackboard.SetValue(Constant.ImageCache, imageCache);
+
+
+                byte[] bytes = texture.EncodeToPNG();
+
+#if !UNITY_EDITOR
+                var dirPath = Application.persistentDataPath + "/cacheImages/";
+#else
+                var dirPath = Application.dataPath + "/cacheImages/";
+#endif
+                if (!Directory.Exists(dirPath))
+                {
+                    Directory.CreateDirectory(dirPath);
+                }
+                File.WriteAllBytes(dirPath + data.ImagePath + ".png", bytes);
             }
-            else
-            {
-                imageCache.Add(path, s);
-            }
-            Debug.Log(path);
-            AppEntry.Blackboard.SetValue(Constant.ImageCache, imageCache);
-            //Destroy(texture, 10);
-            //NativeToolkit.OnImagePicked -= OnImagePicked;
         }
     }
 }

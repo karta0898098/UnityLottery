@@ -82,19 +82,19 @@ namespace App.Runtime
                 }
 
                 yield return wait;
-                //if (!string.IsNullOrEmpty(drawnList[j].ImagePath))
-                //{
-                //    imageCache.TryGetValue(drawnList[j].ImagePath, out var s);
-                //    if (s != null)
-                //    {
-                //        Pic.sprite = s;
-                //    }
-                //}
+                if (!string.IsNullOrEmpty(drawnList[j].ImagePath))
+                {
+                    imageCache.TryGetValue(drawnList[j].ImagePath, out var s);
+                    if (s != null)
+                    {
+                        Pic.sprite = s;
+                    }
+                }
 
                 DrawedText.text = drawnList[j].Text;
                 j++;
             }
-            yield return new WaitForEndOfFrame();
+            yield return wait;
             var drawn = drawnList.Where((item) => item.IsOn == true && item.IsDrawed == false).ToList();
             if (drawn.Count > 0)
             {
@@ -104,9 +104,9 @@ namespace App.Runtime
                 drawn[rand].IsDrawed = true;
                 DrawedText.text = drawn[rand].Text;
 
-                if (!string.IsNullOrEmpty(drawnList[rand].ImagePath))
+                if (!string.IsNullOrEmpty(drawn[rand].ImagePath))
                 {
-                    imageCache.TryGetValue(drawnList[rand].ImagePath, out var s);
+                    imageCache.TryGetValue(drawn[rand].ImagePath, out var s);
                     if (s != null)
                     {
                         Pic.sprite = s;
